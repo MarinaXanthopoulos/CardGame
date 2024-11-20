@@ -57,6 +57,8 @@ public class Deck {
             // Return null if deck is empty
             return null;
         }
+
+        // Decrease cards left and return a card
         cardsLeft--;
         return cards.get(cardsLeft);
     }
