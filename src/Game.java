@@ -1,23 +1,43 @@
+import java.util.Scanner;
+
 public class Game {
     // Instance variables
     private Deck decks;
     private Player players;
 
-    public Game(Deck decks, Player players) {
-        this.decks = decks;
-        this.players = players;
+    public Game(Deck deck, Player person, Player computer) {
+        // Declare deck attributes and make a deck
+        String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        int[] values = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1};
+        String[] suits = {"hears", "spades", "clubs", "diamonds"};
+        deck = new Deck(ranks, suits, values);
+
+        // Ask player for name
+        System.out.println("What's your name?");
+        Scanner input = new Scanner(System.in);
+        String answer = input.nextLine();
+
+        // Create player
+        person = new Player(answer);
+        // Make computer
+        computer = new Player("computer");
     }
 
-    public void printInstructions(){
+    public static void printInstructions(){
         System.out.println("Welcome to the game of Windows!");
         System.out.println("You will be delt 4 cards (no peeking!) and...");
     }
 
-    public void playGame(){
-
+    public static void playGame(){
+        gameSetUp();
     }
 
-    public void main(){
+    private static void gameSetUp() {
+        // Print game instructions
+        printInstructions();
+    }
+
+    public static void main(String[] args){
         playGame();
     }
 }

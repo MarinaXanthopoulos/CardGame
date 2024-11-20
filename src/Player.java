@@ -37,6 +37,6 @@ public class Player {
     // toString
     @Override
     public String toString() {
-        return //name + " has " + getPoints() + " points " + names " cards: " + getHand;
+        return "hi"; //name + " has " + getPoints() + " points " + names " cards: " + getHand;
     }
 }
