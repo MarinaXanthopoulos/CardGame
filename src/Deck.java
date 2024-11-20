@@ -42,9 +42,13 @@ public class Deck {
             // Generate random int between - and i inclusive
             int random = (int)(Math.random()*i + 1);
             // Exchange cards at i and new random int
+            Card copy = cards.get(i);
+            cards.set(i, cards.get(random));
+            cards.set(random, copy);
         }
 
         // Reset cardsLeft value to deck size
+        cardsLeft = cards.size();
     }
 
     // Deal cards
@@ -53,7 +57,8 @@ public class Deck {
             // Return null if deck is empty
             return null;
         }
-        return null;
+        cardsLeft--;
+        return cards.get(cardsLeft);
     }
 
     @Override

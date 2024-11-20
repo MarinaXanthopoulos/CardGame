@@ -1,5 +1,5 @@
 public class Card {
-    // Instnace variables, attributes of a card
+    // Instance variables, attributes of a card
     private String rank;
     private String suit;
     private int value;
