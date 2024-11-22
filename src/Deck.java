@@ -52,12 +52,11 @@ public class Deck {
     }
 
     // Deal cards
-    public Card deal(int cardsLeft){
+    public Card deal(){
         if(isEmpty(cardsLeft)){
             // Return null if deck is empty
             return null;
         }
-
         // Decrease cards left and return a card
         cardsLeft--;
         return cards.get(cardsLeft);
