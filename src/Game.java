@@ -13,7 +13,7 @@ public class Game {
     private Scanner input;
 
     public Game() {
-        // printInstructions();
+        // Print game instructions for player to know how to play! printInstructions();
 
         // Initialize scanner
         input = new Scanner(System.in);
@@ -30,6 +30,93 @@ public class Game {
         person = new Player(answer);
         // Make computer
         computer = new Player("computer");
+    }
+
+    public void playGame(){
+        gameSetUp();
+
+        // Start game by having player take their turn
+        String choice = input.nextLine();
+        checkChoice(choice);
+
+        // playerTakeTurn();
+    }
+
+    private void gameSetUp() {
+        // Deal 4 cards to the player and computer
+        for (int i = 0; i < 4; i ++){
+            person.addCard(deck.deal());
+            computer.addCard(deck.deal());
+        }
+
+        // Display players and computers cards face down
+        System.out.println("Hi " + person.getName() + "!");
+        System.out.println("Here are your 4 cards:          And my 4 cards:");
+        // Card 1 is z and v, card 2 is y and u, card 3 is x and t, card 4 is w and s
+        // Note: the card's aren't displayed as card 1,2,3,4 to not confuse them with their values
+        System.out.println("      Z    Y                       V    U");
+        System.out.println("      X    W                       T    S");
+
+        // Let player choose two cards to look at
+        System.out.println("Which of your two cards do you want to see?");
+        System.out.print("Card: ");
+        String choice1 = input.nextLine();
+        System.out.print("Card: ");
+        String choice2 = input.nextLine();
+
+        // Reveal the two cards at the chosen indexes
+        int index1 = 0;
+        if(choice1.equals("Z")){
+            index1 = 0;
+        }
+        else if (choice1.equals("Y")){
+            index1 = 1;
+        }
+        else if (choice1.equals("X")){
+            index1 = 2;
+        }
+        else if (choice1.equals("W")){
+            index1 = 3;
+        }
+        else{
+            System.out.println("Invalid card choice. Please choose form your cards:  Z    Y");
+            System.out.println("                                                     X    W");
+        }
+
+        int index2 = 0;
+        if(choice2.equals("Z")){
+            index2 = 0;
+        }
+        else if (choice2.equals("Y")){
+            index2 = 1;
+        }
+        else if (choice2.equals("X")){
+            index2 = 2;
+        }
+        else if (choice2.equals("W")){
+            index2 = 3;
+        }
+        else{
+            System.out.println("Invalid card choice. Please choose form your cards:  Z    Y");
+            System.out.println("                                                     X    W");
+        }
+        System.out.println(choice1 + " is "+ person.getHand().get(index1));
+        System.out.println(choice2 + " is "+ person.getHand().get(index2));
+
+        // Pretend computer has looked at their own cards
+        System.out.println("I looked at two of mine already! Your turn to draw, type 'draw' to take your turn.");
+    }
+
+    private void checkChoice(String choice) {
+        if(choice.equals("draw")){
+            //person.drawCard();
+        }
+        else if(choice.equals("windows!")){
+            endGame();
+        }
+    }
+
+    private void endGame() {
     }
 
     public static void printInstructions(){
@@ -49,32 +136,6 @@ public class Game {
         System.out.println("             Q - allows you to look at one of your opponents cards and swap if you wnat.");
         System.out.println("             J - allows you to blindly swap with someone elses cards.");
         System.out.println("To end the game, type windows! All cards will be revealed and the player with the lowest point value wins!");
-    }
-
-    public void playGame(){
-        gameSetUp();
-    }
-
-    private void gameSetUp() {
-        // Deal 4 cards to the player and computer
-        for (int i = 0; i < 4; i ++){
-            person.addCard(deck.deal());
-            computer.addCard(deck.deal());
-        }
-
-        // Display players and computers cards face down
-        System.out.println("Hi " + person.getName() + "!");
-        System.out.println("Here are your 4 cards:          And my 4 cards:");
-        System.out.println("      Z    Y                       V    U");
-        System.out.println("      X    W                       T    S");
-
-        // Let player choose two cards to look at
-        System.out.println("Which of your two cards do you want to see?");
-        System.out.print("Card: ");
-        String index1 = input.nextLine();
-        System.out.print("Card: ");
-        String index2 = input.nextLine();
-
     }
 
     public static void main(String[] args){

@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27eb6eab-d3b9-4b72-b7c4-6a92d609081e" name="Changes" comment="worked on game class, continuing game set up and trying to deal cards to player and computer (still working on this part)">
+    <list default="true" id="27eb6eab-d3b9-4b72-b7c4-6a92d609081e" name="Changes" comment="worked on game class, finished printing instructions and all of game set up! (dealt 4 cards to computer and player and let player choose 2 to look at... I haven't coded the look at part yet, though!)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Deck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +113,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732303857253</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="worked on game class, finished printing instructions and all of game set up! (dealt 4 cards to computer and player and let player choose 2 to look at... I haven't coded the look at part yet, though!)">
+      <option name="closed" value="true" />
+      <created>1732311682544</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1732311682544</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -134,6 +140,7 @@
     <MESSAGE value="worked on deck class (shuffle and deal methods)" />
     <MESSAGE value="worked on game class (creating my deck and player and starting to work on gameSetUp)" />
     <MESSAGE value="worked on game class, continuing game set up and trying to deal cards to player and computer (still working on this part)" />
-    <option name="LAST_COMMIT_MESSAGE" value="worked on game class, continuing game set up and trying to deal cards to player and computer (still working on this part)" />
+    <MESSAGE value="worked on game class, finished printing instructions and all of game set up! (dealt 4 cards to computer and player and let player choose 2 to look at... I haven't coded the look at part yet, though!)" />
+    <option name="LAST_COMMIT_MESSAGE" value="worked on game class, finished printing instructions and all of game set up! (dealt 4 cards to computer and player and let player choose 2 to look at... I haven't coded the look at part yet, though!)" />
   </component>
 </project>
