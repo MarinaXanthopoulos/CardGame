@@ -43,6 +43,9 @@ public class Game {
             System.out.print("Type your choice ('draw' or 'windows!'): ");
             String turnChoice = input.nextLine();
             gameRunning = playerAction(turnChoice);
+            if (gameRunning) {
+                computerTurn();
+            }
         }
     }
 
@@ -85,8 +88,8 @@ public class Game {
         }
 
         revealCards(choice1, choice2);
-        // Pretend computer has looked at their own cards
-        System.out.println("I looked at two of mine already! Your turn to draw, type 'draw' to take your turn.");
+        // Pretend computer has looked at their own cards (they will use the values of these cards later when they get special cards
+        System.out.println("I looked at my V and U cards! Your turn to draw, type 'draw' to take your turn.");
     }
 
     private void revealCards(String choice1, String choice2){
@@ -216,7 +219,7 @@ public class Game {
                     }
                 }
 
-                // Q means look swap
+            // Q means look swap
             case 12:
                 System.out.println("Q is a special card! You may look at one of your cards and swap it with mine if you want.");
                 System.out.print("Which of your cards do you want to look at? (Z, Y, X, W) ");
@@ -262,6 +265,111 @@ public class Game {
         else {
             System.out.println("Invalid choice.");
             return true;
+        }
+    }
+
+    private void computerTurn() {
+        System.out.println("My turn!");
+        // Draw card
+        Card drawn = deck.deal();
+
+        if(isSpecial(drawn)) {
+            switch (drawn.getValue()) {
+                // 7 means look at your own card
+                case 7:
+                    System.out.println("I got a 7 and looked at one of my cards!");
+                    break;
+
+                // 8 means look at someone elses card
+                case 8:
+                    System.out.println("I got an 8 and looked at one of your cards!");
+                    break;
+
+                // J means blind swap
+                case 11:
+                    System.out.println("I got an 11 so am blind-swapping with one of your cards...");
+                    int myIndex = (int) (Math.random() * 4);
+                    int playerIndex = (int) (Math.random() * 4);
+                    Card myCard = computer.getHand().get(myIndex);
+                    Card playerCard = person.getHand().get(playerIndex);
+                    computer.getHand().set(myIndex, playerCard);
+                    person.getHand().set(playerIndex, myCard);
+                    String myLetter;
+                    if (myIndex == 0) {
+                        myLetter = "V";
+                    } else if (myIndex == 1) {
+                        myLetter = "U";
+                    } else if (myIndex == 2) {
+                        myLetter = "T";
+                    } else {
+                        myLetter = "S";
+                    }
+                    String playerLetter;
+                    if (playerIndex == 0) {
+                        playerLetter = "Z";
+                    } else if (playerIndex == 1) {
+                        playerLetter = "Y";
+                    } else if (playerIndex == 2) {
+                        playerLetter = "X";
+                    } else {
+                        playerLetter = "W";
+                    }
+                    System.out.println("I blindly swapped my " + myLetter + " card with your " + playerLetter + " card.");
+                    break;
+
+                // Q means look swap
+                case 12:
+                    int randomIndex = (int) (Math.random() * 4);
+                    playerCard = person.getHand().get(randomIndex);
+
+                    playerLetter = "";
+                    if (randomIndex == 0) {
+                        playerLetter = "Z";
+                    } else if (randomIndex == 1) {
+                        playerLetter = "Y";
+                    } else if (randomIndex == 2) {
+                        playerLetter = "X";
+                    } else if (randomIndex == 3) {
+                        playerLetter = "W";
+                    }
+                    int computerV = computer.getHand().get(0).getValue();
+                    int computerU = computer.getHand().get(1).getValue();
+
+                    myLetter = "";
+                    Card cardToSwap = null;
+                    int swapIndex = -1;
+                    if (playerCard.getValue() < computerV) {
+                        cardToSwap = computer.getHand().get(0);
+                        swapIndex = 0;
+                        myLetter = "V";
+                    } else if (playerCard.getValue() < computerU) {
+                        cardToSwap = computer.getHand().get(1);
+                        swapIndex = 1;
+                        myLetter = "U";
+                    }
+                    if (cardToSwap != null) {
+                        System.out.println("I swapped your " + playerLetter + " card with my " + myLetter + " card.");
+                        computer.getHand().set(swapIndex, playerCard);
+                        person.getHand().set(randomIndex, cardToSwap);
+                    } else {
+                        System.out.println("I drew a Q but decided not to swap with your card.");
+                    }
+                    break;
+            }
+        } else {
+            int computerV = computer.getHand().get(0).getValue();
+            int computerU = computer.getHand().get(1).getValue();
+            if (drawn.getValue() < computerV){
+                computer.getHand().set(0, drawn);
+                System.out.println("I replaced my V card with the drawn card.");
+                System.out.println("Discarded V card, it was a " + computer.getHand().get(0));
+            } else if (drawn.getValue() < computerU) {
+                computer.getHand().set(1, drawn);
+                System.out.println("I replaced my U card with the drawn card.");
+                System.out.println("Discarded U card, it was a " + computer.getHand().get(1));
+            } else {
+                System.out.println("Discarding drawn card, it was a " + drawn);
+            }
         }
     }
 
