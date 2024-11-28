@@ -44,9 +44,17 @@ public class Player {
         hand.add(newCard);
     }
 
+    public int calculateScore() {
+        int totalScore = 0;
+        for (Card card : hand) {
+            totalScore += card.getValue();
+        }
+        return totalScore;
+    }
+
     // toString
     @Override
     public String toString() {
-        return "hi"; //name + " has " + getPoints() + " points " + names " cards: " + getHand;
+        return name + " has " + points + " points. Cards: " + hand;
     }
 }

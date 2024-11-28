@@ -31,8 +31,8 @@ public class Deck {
     }
 
     // Check if deck is now empty
-    public boolean isEmpty(int cardsLeft){
-        return getCardsLeft() == 0;
+    public boolean isEmpty(){
+        return cardsLeft == 0;
     }
 
     // Shuffle the deck
@@ -53,8 +53,8 @@ public class Deck {
 
     // Deal cards
     public Card deal(){
-        if(isEmpty(cardsLeft)){
-            // Return null if deck is empty
+        // Return null if deck is empty
+        if(isEmpty()){
             return null;
         }
         // Decrease cards left and return a card
