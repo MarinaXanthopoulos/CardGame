@@ -1,3 +1,4 @@
+// Game Class -Marina Xanthopoulos Windows Card Game
 import java.util.Scanner;
 
 public class Game {
@@ -13,6 +14,7 @@ public class Game {
     private final int[] values = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1};
     private Scanner input;
 
+    // Creates the aspects for the game and prints instructions
     public Game() {
         // Print game instructions for player to know how to play!
         printInstructions();
@@ -33,15 +35,20 @@ public class Game {
         computer = new Player("computer");
     }
 
+    // Sets up game and runs the game (uses boolean value to keep game going until someone ends it)
     public void playGame(){
         gameSetUp();
 
         // Start game by having player take their turn
         boolean gameRunning = true;
+
         // Create a loop until game ends
         while (gameRunning) {
+            // Have player take a turn
             System.out.print("Type your choice ('draw' or 'windows!'): ");
             String turnChoice = input.nextLine();
+
+            // After a players turn let computer take their turn
             gameRunning = playerAction(turnChoice);
             if (gameRunning) {
                 computerTurn();
@@ -49,6 +56,7 @@ public class Game {
         }
     }
 
+    // Deals cards and shows players their starting cards
     private void gameSetUp() {
         // Deal 4 cards to the player and computer
         for (int i = 0; i < 4; i ++){
@@ -59,6 +67,7 @@ public class Game {
         // Display players and computers cards face down
         System.out.println("Hi " + person.getName() + "!");
         System.out.println("Here are your 4 cards:          And my 4 cards:");
+
         // Card 1 is z and v, card 2 is y and u, card 3 is x and t, card 4 is w and s
         // Note: the card's aren't displayed as card 1,2,3,4 to not confuse them with their values
         System.out.println("      Z    Y                       V    U");
@@ -69,6 +78,7 @@ public class Game {
         String choice1;
         String choice2;
 
+        // Make sure it's a valid card to look at
         while(true) {
             System.out.print("Card: ");
             choice1 = input.nextLine().toUpperCase();
@@ -88,15 +98,18 @@ public class Game {
         }
 
         revealCards(choice1, choice2);
-        // Pretend computer has looked at their own cards (they will use the values of these cards later when they get special cards
+        // Pretend computer has looked at their own cards (they will use the values of these cards
+        // later when they get special cards
         System.out.println("I looked at my V and U cards! Your turn to draw, type 'draw' to take your turn.");
     }
 
+    // Shows cards given the String names
     private void revealCards(String choice1, String choice2){
         // Reveal the two cards at the chosen indexes
         int index1 = getIndex(choice1);
         int index2 = getIndex(choice2);
 
+        // Make sure they're valid card index's
         if(index1 != -1 && index2 != -1){
             System.out.println(choice1 + " is "+ person.getHand().get(index1));
             System.out.println(choice2 + " is "+ person.getHand().get(index2));
@@ -105,11 +118,14 @@ public class Game {
         }
     }
 
+    // Player's turn controls
     private boolean playerAction(String choice) {
         switch (choice.toLowerCase()) {
             case "draw":
+                // Draw a card
                 Card drawn = deck.deal();
                 System.out.println("You drew a " + drawn);
+
                 // Check if it's a special card
                 boolean isSpecial = isSpecial(drawn);
                 if(isSpecial) {
@@ -139,16 +155,19 @@ public class Game {
                 }
                 return true;
 
+            // End the game if the player types windows
             case "windows!":
                 endGame();
                 return false;
 
+           // Say invalid choice if the player doesn't choose the above options
             default:
                 System.out.println("Invalid choice.");
                 return true;
         }
     }
 
+    // Check if the card is a special card with diffent player turn options
     private boolean isSpecial(Card drawn) {
         if (drawn.getValue() == 8 || drawn.getValue() == 7 || drawn.getValue() == 11 || drawn.getValue() == 12){
             return true;
@@ -157,6 +176,7 @@ public class Game {
         }
     }
 
+    // Replaces card of choice with the drawn card
     private void replaceCard(Card drawn) {
         System.out.println("Which card do you want to replace? (Z, Y, X, W) ");
         String replaceChoice = input.nextLine().toUpperCase();
@@ -170,6 +190,7 @@ public class Game {
         }
     }
 
+    // Special card options if it was a special card
     private void specialCard(Card drawn) {
         switch (drawn.getValue()) {
             // 7 means look at your own card
@@ -192,7 +213,8 @@ public class Game {
                 String computerLookChoice = input.nextLine();
                 int computerLookIndex = getIndex(computerLookChoice);
                 if (computerLookIndex != -1) {
-                    System.out.println("My card " + computerLookChoice + " is " + computer.getHand().get(computerLookIndex));
+                    System.out.println("My card " + computerLookChoice + " is " +
+                            computer.getHand().get(computerLookIndex));
                 } else {
                     System.out.println("Invalid card choice.");
                 }
@@ -221,10 +243,14 @@ public class Game {
 
             // Q means look swap
             case 12:
-                System.out.println("Q is a special card! You may look at one of your cards and swap it with mine if you want.");
+                System.out.println("Q is a special card! You may look at one of your " +
+                        "cards and swap it with mine if you want.");
                 System.out.print("Which of your cards do you want to look at? (Z, Y, X, W) ");
+                // Get the choice card they want to look at
                 String personChoice = input.nextLine();
+                // Set the int index to the String card name
                 int personIndex = getIndex(personChoice);
+                // Make sure it's a valid index and print out what the card there is
                 if (personIndex != -1) {
                     System.out.println("Your card " + personChoice + " is " + person.getHand().get(personIndex));
                     System.out.println("Do you want to swap this card with an opponent's? (yes/no)");
@@ -253,6 +279,7 @@ public class Game {
         }
     }
 
+    // See what the player does
     private boolean checkChoice(String choice) {
         if(choice.equals("draw")){
             Card drawn = deck.deal();
@@ -268,6 +295,7 @@ public class Game {
         }
     }
 
+    // Computer's simulated turn
     private void computerTurn() {
         System.out.println("My turn!");
         // Draw card
@@ -314,7 +342,8 @@ public class Game {
                     } else {
                         playerLetter = "W";
                     }
-                    System.out.println("I blindly swapped my " + myLetter + " card with your " + playerLetter + " card.");
+                    System.out.println("I blindly swapped my " + myLetter + " card with your " + playerLetter +
+                            " card.");
                     break;
 
                 // Q means look swap
@@ -373,6 +402,7 @@ public class Game {
         }
     }
 
+    // End game
     private void endGame() {
         System.out.println("Game Over!");
         System.out.println(person.getName() + "'s cards: " + person.getHand());
@@ -391,6 +421,7 @@ public class Game {
         }
     }
 
+    // Get the index given the String card name
     private int getIndex(String choice) {
         if(choice.equals("Z") || choice.equals("V")){
             return 0;
@@ -410,6 +441,7 @@ public class Game {
         }
     }
 
+    // Instructions to play
     public static void printInstructions(){
         System.out.println("Welcome to the game of Windows!");
         System.out.println("You will be delt 4 cards (no peeking!). Your goal is to get the lowest point value.");
@@ -426,7 +458,8 @@ public class Game {
         System.out.println("             8 - allows you to look at one of your opponents cards.");
         System.out.println("             Q - allows you to look at one of your opponents cards and swap if you wnat.");
         System.out.println("             J - allows you to blindly swap with someone elses cards.");
-        System.out.println("To end the game, type windows! All cards will be revealed and the player with the lowest point value wins!");
+        System.out.println("To end the game, type windows! All cards will be revealed and " +
+                " the player with the lowest point value wins!");
     }
 
     public static void main(String[] args){

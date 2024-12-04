@@ -1,3 +1,4 @@
+// Player Class -Marina Xanthopoulos Windows Card Game
 import java.util.ArrayList;
 
 public class Player {

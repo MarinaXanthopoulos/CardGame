@@ -1,3 +1,5 @@
+// Card Class -Marina Xanthopoulos Windows Card Game
+
 public class Card {
     // Instance variables, attributes of a card
     private String rank;
@@ -24,9 +26,9 @@ public class Card {
         return value;
     }
 
-    // toString
+    // toString -print the rank NOT the suit
     @Override
     public String toString() {
-        return rank + " of " + suit;
+        return rank;
     }
 }
