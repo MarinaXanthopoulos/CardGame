@@ -3,13 +3,14 @@ import java.util.Scanner;
 
 public class Game {
     // Instance variables
+    private CardGameViewer window;
     private static Deck deck;
     private Player person;
     private Player computer;
 
     // Make instance variabels for the deck attributes (final as they never change)
     private final String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-    private final String[] suits = {"hearts", "spades", "clubs", "diamonds"};
+    private final String[] suits = {"spades", "hearts", "diamonds", "clubs"};
     // All cards have their numerical value except a = 0 and k = -1
     private final int[] values = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1};
     private Scanner input;

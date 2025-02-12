@@ -1,10 +1,13 @@
 // Card Class -Marina Xanthopoulos Windows Card Game
 
+import java.awt.*;
+
 public class Card {
     // Instance variables, attributes of a card
     private String rank;
     private String suit;
     private int value;
+    private Image image;
 
     // Constructor
     public Card(String rank, String suit, int value) {

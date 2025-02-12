@@ -1,4 +1,5 @@
 // Deck Class -Marina Xanthopoulos Windows Card Game
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Deck {
@@ -13,7 +14,8 @@ public class Deck {
         // Create cards based on given arrays
         for(int i = 0; i < ranks.length; i++) {
             for (String suit : suits) {
-                cards.add(new Card(ranks[i], suit, values[i]));
+                String filename = "Resources/cards" + i + ".png")
+                cards.add(new Card(ranks[i], suit, values[i], new ImageIcon(filename)));
             }
         }
 
