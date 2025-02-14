@@ -14,7 +14,7 @@ public class Deck {
         // Create cards based on given arrays
         for(int i = 0; i < ranks.length; i++) {
             for (String suit : suits) {
-                String filename = "Resources/cards" + i + ".png")
+                String filename = "Resources/cards" + i + ".png";
                 cards.add(new Card(ranks[i], suit, values[i], new ImageIcon(filename)));
             }
         }

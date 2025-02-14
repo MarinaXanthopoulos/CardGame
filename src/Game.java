@@ -7,6 +7,7 @@ public class Game {
     private static Deck deck;
     private Player person;
     private Player computer;
+    private int state;
 
     // Make instance variabels for the deck attributes (final as they never change)
     private final String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
@@ -17,6 +18,9 @@ public class Game {
 
     // Creates the aspects for the game and prints instructions
     public Game() {
+        state = 0;
+        window = new CardGameViewer(this);
+        window.repaint();
         // Print game instructions for player to know how to play!
         printInstructions();
 

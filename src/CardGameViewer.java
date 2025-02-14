@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 
-public class CardGameViewer {
+public class CardGameViewer extends JFrame {
     // Instance variables
     private Game game;
     private final int WINDOW_WIDTH = 1200;
@@ -13,18 +12,30 @@ public class CardGameViewer {
     public CardGameViewer(Game game){
         this.game = game;
 
-        // Load/initiate x and o images
-
-
-        // Setup the windo and the buffer strategy
+        // Setup the window
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setTitle("TicTacToe!");
+        this.setTitle("Windows!");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-        createBufferStrategy(2);
     }
 
     public void paint(Graphics g){
-        super.paint(g);
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        if(state == 0){
+            paintInstructions(g);
+        } else if (state == 1){
+            paintGame(g);
+        } else if (state == 2) {
+            //paintEnd(g);
+        }
+    }
+
+    private void paintInstructions(Graphics g) {
+        g.drawString("hi", 100, 100);
+        repaint();
+    }
+
+    private void paintGame(Graphics g){
     }
 }

@@ -1,5 +1,6 @@
 // Card Class -Marina Xanthopoulos Windows Card Game
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Card {
@@ -10,7 +11,7 @@ public class Card {
     private Image image;
 
     // Constructor
-    public Card(String rank, String suit, int value) {
+    public Card(String rank, String suit, int value, ImageIcon imageIcon) {
         this.rank = rank;
         this.suit = suit;
         this.value = value;
