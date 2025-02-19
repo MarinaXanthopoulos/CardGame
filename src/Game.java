@@ -461,7 +461,7 @@ public class Game {
         System.out.println("     Use the card if it's a special card. The special cards are:");
         System.out.println("             7 - allows you to peek at one of your cards.");
         System.out.println("             8 - allows you to look at one of your opponents cards.");
-        System.out.println("             Q - allows you to look at one of your opponents cards and swap if you wnat.");
+        System.out.println("             Q - allows you to look at one of your opponents cards and swap if you want.");
         System.out.println("             J - allows you to blindly swap with someone elses cards.");
         System.out.println("To end the game, type windows! All cards will be revealed and " +
                 " the player with the lowest point value wins!");
