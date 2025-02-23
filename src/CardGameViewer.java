@@ -13,25 +13,59 @@ public class CardGameViewer extends JFrame {
     // Constructor
     public CardGameViewer(Game game){
         this.game = game;
-
         // Setup the window
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Windows!");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-        state = 1;
+        this.state = 1;
     }
 
-    public void paint(Graphics g){
+    public void setState(int newState) {
+        this.state = newState;
+        repaint();  // Ensure the screen updates when state changes
+    }
 
-        if(state == 0){
-            paintInstructions(g);
-        } else if (state == 1){
+
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (state == 1) {
             paintGame(g);
-        } else if (state == 2) {
-            //paintEnd(g);
         }
     }
+
+    private void paintGame(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+
+        ArrayList<Card> playerHand = game.getPerson().getHand();
+        ArrayList<Card> computerHand = game.getComputer().getHand();
+
+        int xLeft = 200, yLeft = 200, spacingX = 100, spacingY = 150;
+        int row = 0, col = 0;
+
+        for (Card card : playerHand) {
+            card.draw(g, xLeft + (col * spacingX), yLeft + (row * spacingY), this);
+            col++;
+            if (col == 2) {
+                col = 0;
+                row++;
+            }
+        }
+
+        int xRight = 500, yRight = 200;
+        row = 0;
+        col = 0;
+        for (Card card : computerHand) {
+            card.draw(g, xRight + (col * spacingX), yRight + (row * spacingY), this);
+            col++;
+            if (col == 2) {
+                col = 0;
+                row++;
+            }
+        }
+    }
+
 
     private void paintInstructions(Graphics g) {
         g.setColor(Color.BLACK);
@@ -60,22 +94,11 @@ public class CardGameViewer extends JFrame {
         repaint();
     }
 
-    private void paintGame(Graphics g){
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        // Draw Player's name and cards
-        //g.drawString("Player: " + game.getPlayer().getName(), 20, 30);
-        int xOffset = 200;
-        int yOffset = 250;
-        ImageIcon cardBack = new ImageIcon("Resources/Cards/back.png");
-        Image backImage = cardBack.getImage();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                int x = xOffset + j * (100 + 20); // Horizontal spacing between cards
-                int y = yOffset + i * (150 + 20); // Vertical spacing between cards
-                g.drawImage(backImage, x, y, 100, 150, null); // Draw each card
-            }
-        }
+    public void draw(Graphics g, int x, int y, CardGameViewer viewer) {
+        g.setColor(Color.WHITE);
+        g.fillRect(x, y, 80, 120); // Placeholder card shape
+        g.setColor(Color.BLACK);
+        g.drawRect(x, y, 80, 120);
     }
 }

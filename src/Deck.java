@@ -25,18 +25,11 @@ public class Deck {
     }
 
     // Getters & Setters
-    public int getCardsLeft() {
-        return cardsLeft;
-    }
-
-    public void setCardsLeft(int cardsLeft){
-        this.cardsLeft = cardsLeft;
-    }
+    public int getCardsLeft() { return cardsLeft; }
+    public void setCardsLeft(int cardsLeft){ this.cardsLeft = cardsLeft; }
 
     // Check if deck is now empty
-    public boolean isEmpty(){
-        return cardsLeft == 0;
-    }
+    public boolean isEmpty(){ return cardsLeft == 0; }
 
     // Shuffle the deck
     public void shuffle(){

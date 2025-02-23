@@ -18,31 +18,40 @@ public class Game {
 
     // Creates the aspects for the game and prints instructions
     public Game() {
-        state = 0;
-        window = new CardGameViewer(this);
-        window.repaint();
-        // Print game instructions for player to know how to play!
-        printInstructions();
-
-        // Initialize scanner
-        input = new Scanner(System.in);
-
         // Create a deck
         deck = new Deck(ranks, suits, values);
+        input = new Scanner(System.in);
 
         // Ask player for name
         System.out.println("What's your name?");
         String answer = input.nextLine();
 
-        // Create player
+        // Create player and computer
         person = new Player(answer);
-        // Make computer
         computer = new Player("computer");
+
+        window = new CardGameViewer(this);
+        dealInitialCards();
+        // Print game instructions for player to know how to play!
+        // printInstructions();
+    }
+
+    // Getters and setters
+    public Player getPerson() { return person; }
+
+    public void dealInitialCards() {
+        // Deal two cards to person and two cards to computer
+        for (int i = 0; i < 4; i++) {
+            person.addCard(deck.deal());
+            computer.addCard(deck.deal());
+        }
+        window.repaint();
     }
 
     // Sets up game and runs the game (uses boolean value to keep game going until someone ends it)
     public void playGame(){
         gameSetUp();
+        window.repaint();
 
         // Start game by having player take their turn
         boolean gameRunning = true;
@@ -61,13 +70,12 @@ public class Game {
         }
     }
 
+    public Player getComputer() {
+        return computer;
+    }
+
     // Deals cards and shows players their starting cards
     private void gameSetUp() {
-        // Deal 4 cards to the player and computer
-        for (int i = 0; i < 4; i ++){
-            person.addCard(deck.deal());
-            computer.addCard(deck.deal());
-        }
 
         // Display players and computers cards face down
         System.out.println("Hi " + person.getName() + "!");
