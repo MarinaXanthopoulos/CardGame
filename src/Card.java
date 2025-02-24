@@ -16,11 +16,7 @@ public class Card {
         this.suit = suit;
         this.value = value;
         this.image = imageIcon.getImage();
-        this.isFaceUp = false;
-    }
-
-    public void flip() {
-        this.isFaceUp = !this.isFaceUp;
+        this.isFaceUp = true;
     }
 
     // Getters & Setters
@@ -28,17 +24,17 @@ public class Card {
     public String getSuit() { return suit; }
     public int getValue() { return value; }
     public boolean isFaceUp() { return isFaceUp; }
+    public void setFaceUp(boolean faceUp) { this.isFaceUp = faceUp; }
 
     public void draw(Graphics g, int x, int y, CardGameViewer viewer) {
+        int cardWidth = 80;
+        int cardHeight = 120;
+
         if (isFaceUp) {
-            g.setColor(Color.WHITE);
-            g.fillRect(x, y, 80, 120);
-            g.setColor(Color.BLACK);
-            g.drawRect(x, y, 80, 120);
-            g.drawString(rank + " of " + suit, x + 10, y + 60);
+            g.drawImage(image, x, y, cardWidth, cardHeight, viewer);
         } else {
             ImageIcon cardBack = new ImageIcon("Resources/Cards/back.png");
-            g.drawImage(cardBack.getImage(), x, y, 80, 120, viewer);
+            g.drawImage(cardBack.getImage(), x, y, cardWidth, cardHeight, viewer);
         }
     }
 

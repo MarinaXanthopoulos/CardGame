@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27eb6eab-d3b9-4b72-b7c4-6a92d609081e" name="Changes" comment="got cards to show up for the initial start of the game screen">
+    <list default="true" id="27eb6eab-d3b9-4b72-b7c4-6a92d609081e" name="Changes" comment="cards show when dealt and when i set faceup as true they show up with thier values.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Card.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CardGameViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CardGameViewer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Deck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739924595141</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="cards show when dealt and when i set faceup as true they show up with thier values.">
+      <option name="closed" value="true" />
+      <created>1740346485263</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1740346485263</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -230,20 +237,26 @@
     <MESSAGE value="started my GUI game, worked on cardgameviewer and adding an image to each card when they're made in the deck class" />
     <MESSAGE value="got my window to show up and started implementing state variable to change how the window looks at certain times during the game" />
     <MESSAGE value="got cards to show up for the initial start of the game screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="got cards to show up for the initial start of the game screen" />
+    <MESSAGE value="cards show when dealt and when i set faceup as true they show up with thier values." />
+    <option name="LAST_COMMIT_MESSAGE" value="cards show when dealt and when i set faceup as true they show up with thier values." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/CardGameViewer.java</url>
-          <line>18</line>
+          <line>20</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Game.java</url>
-          <line>39</line>
+          <line>53</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Game.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

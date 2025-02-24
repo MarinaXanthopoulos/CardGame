@@ -8,6 +8,8 @@ public class CardGameViewer extends JFrame {
     private final int WINDOW_WIDTH = 1200;
     private final int WINDOW_HEIGHT = 900;
     private final int TITLE_BAR_HEIGHT = 23;
+    // Variable to control what window is displayed
+    // 0 = instructions, 1 = playing, 2 = final screen
     private int state;
 
     // Constructor
@@ -18,54 +20,30 @@ public class CardGameViewer extends JFrame {
         this.setTitle("Windows!");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-        this.state = 1;
+        this.state = 0;
     }
 
     public void setState(int newState) {
         this.state = newState;
-        repaint();  // Ensure the screen updates when state changes
+        // Ensure the screen updates when state changes
+        repaint();
     }
-
 
     public void paint(Graphics g) {
         super.paint(g);
-        if (state == 1) {
+        if (state == 0) {
+            // Show instructions
+            paintInstructions(g);
+        }
+        else if (state == 1) {
+            // Main game view
             paintGame(g);
         }
-    }
-
-    private void paintGame(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, 16));
-
-        ArrayList<Card> playerHand = game.getPerson().getHand();
-        ArrayList<Card> computerHand = game.getComputer().getHand();
-
-        int xLeft = 200, yLeft = 200, spacingX = 100, spacingY = 150;
-        int row = 0, col = 0;
-
-        for (Card card : playerHand) {
-            card.draw(g, xLeft + (col * spacingX), yLeft + (row * spacingY), this);
-            col++;
-            if (col == 2) {
-                col = 0;
-                row++;
-            }
-        }
-
-        int xRight = 500, yRight = 200;
-        row = 0;
-        col = 0;
-        for (Card card : computerHand) {
-            card.draw(g, xRight + (col * spacingX), yRight + (row * spacingY), this);
-            col++;
-            if (col == 2) {
-                col = 0;
-                row++;
-            }
+        else if (state == 2) {
+            // End-of-game screen
+            paintEnd(g);
         }
     }
-
 
     private void paintInstructions(Graphics g) {
         g.setColor(Color.BLACK);
@@ -93,12 +71,157 @@ public class CardGameViewer extends JFrame {
         g.drawString("To end the game, type windows! All cards will be revealed and the player with the lowest point value wins!", 200, 470);
         repaint();
     }
+    private void paintGame(Graphics g) {
+        // Retrieve each side’s hand
+        ArrayList<Card> playerHand = game.getPerson().getHand();
+        ArrayList<Card> computerHand = game.getComputer().getHand();
 
+        // Indices of face-up cards
+        ArrayList<Integer> revealedPlayer = game.getRevealedPlayerCards();
+        ArrayList<Integer> revealedComputer = game.getRevealedComputerCards();
 
-    public void draw(Graphics g, int x, int y, CardGameViewer viewer) {
-        g.setColor(Color.WHITE);
-        g.fillRect(x, y, 80, 120); // Placeholder card shape
+        // Coordinates for the player's 2x2 grid on the left
+        //   Z(0)    Y(1)
+        //   X(2)    W(3)
+        int startXLeft = 150, startYLeft = 200;
+        int spacingX = 130, spacingY = 160;
+
+        // Draw the player's cards
+        drawCardWithLabel(g, playerHand.get(0), "Z",
+                startXLeft, startYLeft,
+                revealedPlayer.contains(0));
+        drawCardWithLabel(g, playerHand.get(1), "Y",
+                startXLeft + spacingX, startYLeft,
+                revealedPlayer.contains(1));
+        drawCardWithLabel(g, playerHand.get(2), "X",
+                startXLeft, startYLeft + spacingY,
+                revealedPlayer.contains(2));
+        drawCardWithLabel(g, playerHand.get(3), "W",
+                startXLeft + spacingX, startYLeft + spacingY,
+                revealedPlayer.contains(3));
+
+        // Coordinates for the computer's 2x2 grid on the right
+        //   V(0)    U(1)
+        //   T(2)    S(3)
+        int startXRight = 600, startYRight = 200;
+
+        drawCardWithLabel(g, computerHand.get(0), "V",
+                startXRight, startYRight,
+                revealedComputer.contains(0));
+        drawCardWithLabel(g, computerHand.get(1), "U",
+                startXRight + spacingX, startYRight,
+                revealedComputer.contains(1));
+        drawCardWithLabel(g, computerHand.get(2), "T",
+                startXRight, startYRight + spacingY,
+                revealedComputer.contains(2));
+        drawCardWithLabel(g, computerHand.get(3), "S",
+                startXRight + spacingX, startYRight + spacingY,
+                revealedComputer.contains(3));
+
+        // Draw the discard and draw piles
+        paintPiles(g);
+    }
+
+    private void paintEnd(Graphics g) {
         g.setColor(Color.BLACK);
-        g.drawRect(x, y, 80, 120);
+        g.setFont(new Font("Serif", Font.BOLD, 26));
+        g.drawString("Game Over!", 100, 100);
+
+        // Show the final scores
+        int personScore = game.getPerson().calculateScore();
+        int compScore = game.getComputer().calculateScore();
+
+        g.drawString(game.getPerson().getName() + "'s final score: " + personScore, 100, 150);
+        g.drawString("Computer's final score: " + compScore, 100, 190);
+
+        String winner;
+        if (personScore < compScore) {
+            winner = game.getPerson().getName() + " wins!";
+        } else if (personScore > compScore) {
+            winner = "Computer wins!";
+        } else {
+            winner = "It's a tie!";
+        }
+        g.drawString(winner, 100, 230);
+    }
+
+    /**
+     * Draw the discard and draw piles.
+     * We'll put the discard pile on top, the draw pile below it.
+     */
+    private void paintPiles(Graphics g) {
+        // We'll put the discard pile up top, the draw pile below
+        int discardX = 400, discardY = 220;
+        int drawX = 400, drawY = discardY + 180; // 180 px below
+
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.drawString("Discard Pile", discardX, discardY - 10);
+        g.drawString("Draw Pile", drawX, drawY - 10);
+
+        // 1) Discard Pile: top is discardPile[0]
+        Card topDiscard = game.peekTopOfDiscard();
+        if (topDiscard != null) {
+            // Always face-up
+            boolean orig = topDiscard.isFaceUp();
+            topDiscard.setFaceUp(true);
+            topDiscard.draw(g, discardX, discardY, this);
+            topDiscard.setFaceUp(orig);
+        } else {
+            // placeholder if empty
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(discardX, discardY, 80, 120);
+            g.setColor(Color.BLACK);
+            g.drawRect(discardX, discardY, 80, 120);
+        }
+
+        // 2) Draw Pile
+        boolean isDrawing = game.isCurrentlyDrawing();
+        Card topDeckCard = game.peekTopOfDeck();
+        if (isDrawing) {
+            // show currentDrawCard face-up
+            Card drawn = game.getCurrentDrawCard();
+            if (drawn != null) {
+                boolean orig = drawn.isFaceUp();
+                drawn.setFaceUp(true);
+                drawn.draw(g, drawX, drawY, this);
+                drawn.setFaceUp(orig);
+            } else {
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(drawX, drawY, 80, 120);
+                g.setColor(Color.BLACK);
+                g.drawRect(drawX, drawY, 80, 120);
+            }
+        } else {
+            // not currently drawing => show top face-down if not empty
+            if (topDeckCard != null) {
+                ImageIcon backIcon = new ImageIcon("Resources/Cards/back.png");
+                g.drawImage(backIcon.getImage(), drawX, drawY, 80, 120, this);
+            } else {
+                // deck is empty
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(drawX, drawY, 80, 120);
+                g.setColor(Color.BLACK);
+                g.drawRect(drawX, drawY, 80, 120);
+            }
+        }
+    }
+
+
+    /**
+     * Helper method to draw a card and label above it.
+     */
+    private void drawCardWithLabel(Graphics g, Card card, String label, int x, int y, boolean faceUp) {
+        boolean originalState = card.isFaceUp();
+        card.setFaceUp(faceUp);
+
+        card.draw(g, x, y, this);
+
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.drawString(label, x + 30, y - 5);
+
+        // restore
+        card.setFaceUp(originalState);
     }
 }

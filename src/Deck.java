@@ -14,7 +14,7 @@ public class Deck {
         // Create cards based on given arrays
         for(int i = 0; i < ranks.length; i++) {
             for (String suit : suits) {
-                String filename = "Resources/cards" + i + ".png";
+                String filename = "Resources/Cards/" + i + ".png";
                 cards.add(new Card(ranks[i], suit, values[i], new ImageIcon(filename)));
             }
         }
@@ -57,6 +57,15 @@ public class Deck {
         cardsLeft--;
         return cards.get(cardsLeft);
     }
+
+    // Peek the top card of the deck without dealing it
+    public Card peekTop() {
+        if (isEmpty()) {
+            return null; // or throw an exception if you prefer
+        }
+        return cards.get(cardsLeft - 1);
+    }
+
 
     @Override
     public String toString() {
