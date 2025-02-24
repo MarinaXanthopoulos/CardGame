@@ -8,14 +8,19 @@ public class Deck {
     private int cardsLeft;
 
     // Deck constructor
-    public Deck (String[] ranks, String[] suits, int[] values) {
+    public Deck(String[] ranks, String[] suits, int[] values) {
         cards = new ArrayList<>();
 
-        // Create cards based on given arrays
-        for(int i = 0; i < ranks.length; i++) {
-            for (String suit : suits) {
-                String filename = "Resources/Cards/" + i + ".png";
-                cards.add(new Card(ranks[i], suit, values[i], new ImageIcon(filename)));
+        // Make deck
+        for (int i = 0; i < ranks.length; i++) {
+            for (int s = 0; s < suits.length; s++) {
+                // Calculate the file index from i*4 + s
+                int fileIndex = i * suits.length + s;
+                String filename = "Resources/Cards/" + fileIndex + ".png";
+
+                // Build the card
+                Card c = new Card(ranks[i], suits[s], values[i], new ImageIcon(filename));
+                cards.add(c);
             }
         }
 

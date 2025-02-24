@@ -19,22 +19,10 @@ public class Player {
     public int getPoints() { return points; }
     public String getName() { return name; }
 
-    // Take an int num points to add to players points
-    public void addPoints(int numPoints) {
-        // Add new points to current points
-        this.points += numPoints;
-    }
 
     // Take in a card and add it to hand
     public void addCard(Card newCard) {
         hand.add(newCard);
-    }
-
-    public Card getCard(int index) {
-        if (index >= 0 && index < hand.size()) {
-            return hand.get(index);
-        }
-        return null; // Return null if the index is out of bounds
     }
 
     public int calculateScore() {

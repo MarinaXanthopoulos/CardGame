@@ -1,354 +1,323 @@
+// Game Class -Marina Xanthopoulos Windows Card Game
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
+    // Instance Variables
     private CardGameViewer window;
     private static Deck deck;
     private Player person;
     private Player computer;
-
-    // Keep track of which cards are face-up
     private ArrayList<Integer> revealedPlayerCards;
     private ArrayList<Integer> revealedComputerCards;
-
-    // Discard pile (top = last index)
     private ArrayList<Card> discardPile;
-    // The card currently drawn but not decided upon
     private Card currentDrawCard;
     private boolean currentlyDrawing;
-
-    // The state for the viewer: 0=instructions, 1=playing, 2=end
+    private Scanner input;
+    // 0=instructions,1=playing,2=end
     private int state;
 
-    // For convenience, we store the deck attributes again:
-    private final String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
-    private final String[] suits = {"spades","hearts","diamonds","clubs"};
-    private final int[] values = {0,2,3,4,5,6,7,8,9,10,11,12,-1};
+    // Deck stuff
+    private String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+    private String[] suits = {"spades","hearts","diamonds","clubs"};
+    private int[] values = {0,2,3,4,5,6,7,8,9,10,11,12,-1};
 
-    private Scanner input;
-
+    // Constructor
     public Game() {
-        // Create deck, players, etc.
+        window = new CardGameViewer(this);
+        state = 0;
+        window.setState(state);
+
         deck = new Deck(ranks, suits, values);
-        person = new Player("Player");
+        person = new Player("You");
         computer = new Player("Computer");
         input = new Scanner(System.in);
 
-        // Manage revealed cards
         revealedPlayerCards = new ArrayList<>();
         revealedComputerCards = new ArrayList<>();
 
-        // Piles
         discardPile = new ArrayList<>();
         currentDrawCard = null;
         currentlyDrawing = false;
 
-        // Create the GUI
-        window = new CardGameViewer(this);
-        // Start with instructions
-        state = 0;
-        window.setState(state);
-
-        // Deal initial cards
         dealInitialCards();
     }
 
-    // For the viewer to read
+    // Getters n' setters
     public ArrayList<Integer> getRevealedPlayerCards() { return revealedPlayerCards; }
     public ArrayList<Integer> getRevealedComputerCards() { return revealedComputerCards; }
-
     public Player getPerson() { return person; }
     public Player getComputer() { return computer; }
+    public Card getCurrentDrawCard() { return currentDrawCard; }
 
-
-    // The deck is effectively our “draw pile”
+    // Looking functions
     public Card peekTopOfDeck() {
         if (deck.isEmpty()) return null;
         return deck.peekTop();
     }
-
-    // The top of the discard pile is discardPile.get(0), if not empty
     public Card peekTopOfDiscard() {
-        if (discardPile.isEmpty()) {
-            return null;
-        }
+        if(discardPile.isEmpty()) return null;
         return discardPile.get(0);
     }
-
     public boolean isCurrentlyDrawing() {
         return currentlyDrawing;
     }
-    public Card getCurrentDrawCard() {
-        return currentDrawCard;
-    }
 
-    // Deal 4 cards to each
+    // Deals cards to players and fake computer dude
     public void dealInitialCards() {
-        for (int i = 0; i < 4; i++) {
+        for(int i=0; i<4; i++){
             person.addCard(deck.deal());
             computer.addCard(deck.deal());
         }
     }
 
-    // Main game flow
+    // Game logic!
     public void playGame() {
-        // Show the instructions in the GUI (state=0), also do console instructions if desired
-        System.out.println("Welcome to Windows Card Game. Press Enter to proceed...");
+        System.out.println("Welcome to Windows Card Game! Press Enter to proceed...");
         input.nextLine();
 
-        // Move to state=1 (playing)
+        // Move to playing screen
         state = 1;
         window.setState(state);
 
-        // Let the user pick 2 cards to see
+        // Let user see two cards and flip em on screen
         chooseTwoCardsToPeek();
 
-        boolean gameRunning = true;
-        while (gameRunning) {
-            System.out.println("Your turn! Type 'draw' or 'windows!':");
-            String turnChoice = input.nextLine();
-            gameRunning = playerAction(turnChoice);
-            // If still running, do computer turn, etc.
-            if (gameRunning) {
+        // Game loop commence
+        boolean playing = true;
+        while(playing) {
+            System.out.println("\nYour turn! Type 'draw' or 'windows!':");
+            String choice = input.nextLine().toLowerCase();
+            if(choice.equals("draw")){
+                drawCardLogic();
+            }
+            else if(choice.equals("windows!")){
+                endGame();
+                playing=false;
+            }
+            else {
+                System.out.println("Invalid choice. Try again.");
+            }
+            if(playing){
                 computerTurn();
             }
         }
     }
 
-    // Let the user pick 2 cards (Z, Y, X, W => indexes 0..3)
+    // Lookie lookie at two carsd! (display on screen)
     private void chooseTwoCardsToPeek() {
-        System.out.println("Which two of your cards do you want to see? (Z, Y, X, W)");
-        String choice1, choice2;
-        choice1 = getValidCardChoice();
-        choice2 = getValidCardChoiceDifferent(choice1);
+        System.out.println("Which two of your cards do you want to see? (Z,Y,X,W)");
+        String choice1 = getValidCardChoice();
+        String choice2 = getValidCardChoiceDifferent(choice1);
 
-        // Convert card letters to indexes
+        // Call show the cards functions and repaint screen to show em
         int idx1 = getIndex(choice1);
         int idx2 = getIndex(choice2);
-
-        // Reveal them
         revealedPlayerCards.add(idx1);
         revealedPlayerCards.add(idx2);
         window.repaint();
 
-        // Show them in console
+        // Continue as usual to write what the card is in the console
         System.out.println(choice1 + " is " + person.getHand().get(idx1));
         System.out.println(choice2 + " is " + person.getHand().get(idx2));
 
-        // Flip them back down after user presses Enter
-        System.out.println("Press Enter when done viewing those two...");
+        System.out.println("Press Enter when done...");
         input.nextLine();
+
         revealedPlayerCards.remove((Integer)idx1);
         revealedPlayerCards.remove((Integer)idx2);
         window.repaint();
     }
 
-    // Returns a valid card letter from Z,Y,X,W
-    private String getValidCardChoice() {
-        while (true) {
+    // Make sure user's choices are for reals
+    private String getValidCardChoice(){
+        while(true){
             String c = input.nextLine().toUpperCase();
-            if (getIndex(c) != -1) {
+            if(getIndex(c)!=-1) return c;
+            System.out.println("Invalid. Must be (Z,Y,X,W).");
+        }
+    }
+    private String getValidCardChoiceDifferent(String alreadyChosen){
+        while(true){
+            String c = input.nextLine().toUpperCase();
+            if(!c.equals(alreadyChosen) && getIndex(c)!=-1){
                 return c;
             }
-            System.out.println("Invalid choice. Please pick Z,Y,X,W.");
+            System.out.println("Invalid or already chosen. Try again:");
         }
     }
 
-    private String getValidCardChoiceDifferent(String alreadyChosen) {
-        while(true) {
-            String c = input.nextLine().toUpperCase();
-            if (!c.equals(alreadyChosen) && getIndex(c) != -1) {
-                return c;
-            }
-            System.out.println("Invalid choice or already chosen. Try again:");
-        }
-    }
-
-    // Player's turn
-    private boolean playerAction(String choice) {
-        switch (choice.toLowerCase()) {
-            case "draw":
-                drawCardLogic();
-                return true;
-            case "windows!":
-                endGame();
-                return false;
-            default:
-                System.out.println("Invalid choice.");
-                return true;
-        }
-    }
-
-    // Draw logic: show the top card face-up, let user keep or discard
-    private void drawCardLogic() {
-        if (deck.isEmpty()) {
-            System.out.println("No more cards to draw! Ending game...");
+    // Drawing the card
+    private void drawCardLogic(){
+        if(deck.isEmpty()){
+            System.out.println("No more cards in deck! Ending game.");
             endGame();
             return;
         }
-
-        currentlyDrawing = true;
-        currentDrawCard = deck.deal(); // show face-up
+        currentlyDrawing=true;
+        currentDrawCard=deck.deal();
         window.repaint();
 
         System.out.println("You drew a " + currentDrawCard);
-
-        if (isSpecial(currentDrawCard)) {
-            System.out.println("This is a special card ("+ currentDrawCard +").");
-            System.out.println("Type 'use' to use it, 'replace' to add it to your hand, or 'discard' to discard.");
-
-            String actionChoice = input.nextLine().toLowerCase();
-            if (actionChoice.equals("use")) {
-                // Use the special effect
+        if(isSpecial(currentDrawCard)){
+            System.out.println("This is a special card! ('use' / 'replace' / 'discard')?");
+            String action = input.nextLine().toLowerCase();
+            if(action.equals("use")){
                 specialCard(currentDrawCard);
-
-                // After using, ask user if they want to keep it or discard
-                System.out.println("You've used " + currentDrawCard + ".");
-                System.out.println("Do you want to 'keep' (replace a card in your hand) or 'discard' it?");
+                System.out.println("Do you want to 'keep' (replace your card) or 'discard' this " + currentDrawCard + "?");
                 String postUse = input.nextLine().toLowerCase();
-                if (postUse.equals("keep")) {
+                if(postUse.equals("keep")){
                     replaceCard(currentDrawCard);
                 } else {
                     discardCard(currentDrawCard);
                 }
             }
-            else if (actionChoice.equals("replace")) {
+            else if(action.equals("replace")){
                 replaceCard(currentDrawCard);
             }
             else {
-                // Discard
+                // discard
                 discardCard(currentDrawCard);
             }
         }
         else {
-            // Normal card
-            System.out.println("Do you want to replace one of your cards with this one? (yes = replace / no = discard)");
+            // normal card
+            System.out.println("Replace a card with this one? (yes/no)");
             String ans = input.nextLine().toLowerCase();
-            if (ans.equals("yes")) {
+            if(ans.equals("yes")){
                 replaceCard(currentDrawCard);
             } else {
                 discardCard(currentDrawCard);
             }
         }
 
-        // Done deciding
-        currentDrawCard = null;
-        currentlyDrawing = false;
+        currentDrawCard=null;
+        currentlyDrawing=false;
         window.repaint();
     }
 
-    // Discard puts new top at index 0
-    private void discardCard(Card c) {
-        if (c != null) {
-            // Insert at front so it's the top
-            discardPile.add(0, c);
+    // Discard function so we can see the discarded card on screen
+    private void discardCard(Card c){
+        if(c!=null){
+            // Set index to 0 since it's the latest discarded card
+            discardPile.add(0,c);
+            System.out.println("Discarded " + c);
         }
-        System.out.println("Discarded " + c);
     }
 
-    // Replace a chosen card with 'c' and discard the old one
-    private void replaceCard(Card c) {
-        System.out.println("Which card (Z,Y,X,W) do you want to replace?");
+    // Replace function
+    private void replaceCard(Card c){
+        System.out.println("Which card do you want to replace? (Z,Y,X,W)");
         String choice = input.nextLine().toUpperCase();
         int idx = getIndex(choice);
-        if (idx == -1) {
-            System.out.println("Invalid choice, discarding new card instead.");
+        if(idx==-1){
+            System.out.println("Invalid choice! Discarding " + c);
             discardCard(c);
-            return;
+        } else {
+            Card old = person.getHand().get(idx);
+            person.getHand().set(idx,c);
+            System.out.println("Replacing " + choice + " which was " + old + " with " + c);
+            discardCard(old);
         }
-        Card old = person.getHand().get(idx);
-        person.getHand().set(idx, c);
-        discardCard(old);
-        System.out.println("You replaced " + choice + " (which was " + old + ") with " + c);
     }
 
-    // 7, 8, J=11, Q=12
-    private boolean isSpecial(Card c) {
+    // Check if it's specialllll
+    private boolean isSpecial(Card c){
         int v = c.getValue();
-        return (v == 7 || v == 8 || v == 11 || v == 12);
+        return (v==7 || v==8 || v==11 || v==12);
     }
 
-    // Evaluate the special effect
-    private void specialCard(Card drawn) {
-        switch (drawn.getValue()) {
-            // 7 means look at your own card
+    // Special card options if it was a special card
+    private void specialCard(Card c){
+        switch(c.getValue()){
             case 7:
-                System.out.println("7 is a special card! You may look at one of your cards!");
-                System.out.print("Which card do you want to look at? " );
-                String lookChoice = input.nextLine();
-                int lookIndex = getIndex(lookChoice);
-                if (lookIndex != -1) {
-                    System.out.println("Card " + lookChoice + " is " + person.getHand().get(lookIndex));
-                } else {
-                    System.out.println("Invalid card choice.");
+                System.out.println("7 => Peek at one of your cards! (Z,Y,X,W)?");
+                String which = input.nextLine().toUpperCase();
+                int idx = getIndex(which);
+                if(idx!=-1){
+                    revealedPlayerCards.add(idx);
+                    window.repaint();
+                    System.out.println(which + " is " + person.getHand().get(idx));
+                    System.out.println("Press Enter to continue...");
+                    input.nextLine();
+                    revealedPlayerCards.remove((Integer)idx);
+                    window.repaint();
                 }
                 break;
-
-
-            // 8 means look at someone elses card
             case 8:
-                System.out.println("8 is a special card! You may look at one of my cards!");
-                System.out.print("Which card do you want to look at? ");
-                String computerLookChoice = input.nextLine();
-                int computerLookIndex = getIndex(computerLookChoice);
-                if (computerLookIndex != -1) {
-                    System.out.println("My card " + computerLookChoice + " is " +
-                            computer.getHand().get(computerLookIndex));
-                } else {
-                    System.out.println("Invalid card choice.");
+                System.out.println("8 => Peek at one of Computer's cards! (V,U,T,S)?");
+                String cWhich = input.nextLine().toUpperCase();
+                int cIdx = getIndex(cWhich);
+                if(cIdx!=-1){
+                    revealedComputerCards.add(cIdx);
+                    window.repaint();
+                    System.out.println(cWhich + " is " + computer.getHand().get(cIdx));
+                    System.out.println("Press Enter to continue...");
+                    input.nextLine();
+                    revealedComputerCards.remove((Integer)cIdx);
+                    window.repaint();
                 }
                 break;
-
-
-            // J means blind swap
             case 11:
-                System.out.println("J is a special card! You may blindly swap one of your cards with my cards.");
-                System.out.print("Do you want to blindly swap with one of my cards? ");
-                String blindSwap = input.nextLine();
+                System.out.println("J is special! Blindly swap one of your cards (Z,Y,X,W) " +
+                        "with one of the computer's (V,U,T,S)? (yes/no)");
+                String blindSwap = input.nextLine().toLowerCase();
                 if (blindSwap.equals("yes")) {
-                    System.out.println("Which of your cards do you want to blindly swap with mine?");
-                    String bsPersonChoice = input.nextLine();
+                    System.out.println("Which of your cards do you want to swap? (Z,Y,X,W)");
+                    String bsPersonChoice = input.nextLine().toUpperCase();
                     int bsPersonIndex = getIndex(bsPersonChoice);
-                    System.out.println("Which of my cards do you want to blindly swap with?");
-                    String bsChoice = input.nextLine();
+
+                    System.out.println("Which of computer's cards do you want to swap with? (V,U,T,S)");
+                    String bsChoice = input.nextLine().toUpperCase();
                     int bsComputerIndex = getIndex(bsChoice);
-                    if (bsComputerIndex != -1) {
+
+                    if (bsPersonIndex != -1 && bsComputerIndex != -1) {
                         Card personCard = person.getHand().get(bsPersonIndex);
                         Card computerCard = computer.getHand().get(bsComputerIndex);
                         person.getHand().set(bsPersonIndex, computerCard);
                         computer.getHand().set(bsComputerIndex, personCard);
-                        System.out.println("Successfully swapped!");
+                        System.out.println("Successfully swapped your " + bsPersonChoice +
+                                " with computer's " + bsChoice + "!");
+                    } else {
+                        System.out.println("Invalid choice. No swap performed.");
                     }
+                } else {
+                    System.out.println("No blind swap performed.");
                 }
+                break;
 
-
-                // Q means look swap
+            // 12 => Q => look at one of your cards, optionally swap it with computer's
             case 12:
-                System.out.println("Q is a special card! You may look at one of your " +
-                        "cards and swap it with mine if you want.");
-                System.out.print("Which of your cards do you want to look at? (Z, Y, X, W) ");
-                // Get the choice card they want to look at
-                String personChoice = input.nextLine();
-                // Set the int index to the String card name
+                System.out.println("Q is special! You may look at one of your cards (Z,Y,X,W), " +
+                        "then optionally swap with the computer's (V,U,T,S).");
+                String personChoice = input.nextLine().toUpperCase();
                 int personIndex = getIndex(personChoice);
-                // Make sure it's a valid index and print out what the card there is
                 if (personIndex != -1) {
-                    System.out.println("Your card " + personChoice + " is " + person.getHand().get(personIndex));
-                    System.out.println("Do you want to swap this card with an opponent's? (yes/no)");
-                    String swapResponse = input.nextLine();
-                    if (swapResponse.equalsIgnoreCase("yes")) {
-                        System.out.println("Which opponent's card do you want to swap with? (V, U, T, S)");
-                        String computerChoice = input.nextLine();
-                        int computerIndex = getIndex(computerChoice);
-                        if (computerIndex != -1) {
-                            // Swap the cards
-                            Card personCard = person.getHand().get(personIndex);
-                            Card computerCard = computer.getHand().get(computerIndex);
-                            person.getHand().set(personIndex, computerCard);
-                            computer.getHand().set(computerIndex, personCard);
-                            System.out.println("Succesfully swapped!");
+                    // Reveal that card
+                    revealedPlayerCards.add(personIndex);
+                    window.repaint();
+                    Card cardYouHave = person.getHand().get(personIndex);
+                    System.out.println("Your card " + personChoice + " is " + cardYouHave);
+                    System.out.println("Press Enter to continue...");
+                    input.nextLine();
+                    // Flip it back if you want:
+                    revealedPlayerCards.remove((Integer)personIndex);
+                    window.repaint();
+
+                    System.out.println("Do you want to swap this card with the computer's? (yes/no)");
+                    String swapResponse = input.nextLine().toLowerCase();
+                    if (swapResponse.equals("yes")) {
+                        System.out.println("Which of the computer's cards? (V,U,T,S)");
+                        String compChoice = input.nextLine().toUpperCase();
+                        int compIndex = getIndex(compChoice);
+                        if (compIndex != -1) {
+                            Card compCard = computer.getHand().get(compIndex);
+                            person.getHand().set(personIndex, compCard);
+                            computer.getHand().set(compIndex, cardYouHave);
+                            System.out.println("Successfully swapped your " + personChoice +
+                                    " with computer's " + compChoice + "!");
                         } else {
-                            System.out.println("Invalid opponent card choice. No swap.");
+                            System.out.println("Invalid computer card choice. No swap.");
                         }
                     } else {
                         System.out.println("No swap performed.");
@@ -360,73 +329,65 @@ public class Game {
         }
     }
 
-
-    // Computer’s turn
-    private void computerTurn() {
-        System.out.println("Computer's turn...");
-        if (deck.isEmpty()) {
+    // Simulate playing agianst someone
+    private void computerTurn(){
+        System.out.println("\n--- Computer's turn ---");
+        if(deck.isEmpty()){
             endGame();
             return;
         }
         Card c = deck.deal();
-        System.out.println("Computer drew a hidden card.");
+        System.out.println("Computer draws a card (secret: "+ c + ")");
 
-        // Simple logic: always discard. You could do something more advanced
-        if (isSpecial(c)) {
-            // Possibly do special effect or not
-            System.out.println("Computer discards the special card: " + c);
-            discardCard(c);
-        } else {
-            // Discard or keep if it's better
-            // We'll just discard to keep it simple
-            System.out.println("Computer discards: " + c);
-            discardCard(c);
-        }
+        // super-simple AI, discards everything
+        discardCard(c);
     }
 
-    // End the game
-    private void endGame() {
+    // Endddddd!
+    private void endGame(){
         System.out.println("Game Over!");
         revealedPlayerCards.clear();
         revealedComputerCards.clear();
-        // reveal all 4
-        revealedPlayerCards.add(0);revealedPlayerCards.add(1);
-        revealedPlayerCards.add(2);revealedPlayerCards.add(3);
+        // Reveal all cards by flipping
+        for(int i=0;i<4;i++){
+            revealedPlayerCards.add(i);
+            revealedComputerCards.add(i);
+        }
 
-        revealedComputerCards.add(0);revealedComputerCards.add(1);
-        revealedComputerCards.add(2);revealedComputerCards.add(3);
-
-        state = 2;
+        // Display final screen!
+        state=2;
         window.setState(state);
 
-        int pScore = person.calculateScore();
-        int cScore = computer.calculateScore();
-        System.out.println("Your final hand: " + person.getHand());
-        System.out.println("Computer final hand: " + computer.getHand());
-        System.out.println("Your score: " + pScore);
-        System.out.println("Computer score: " + cScore);
-        if (pScore < cScore) {
+        int pScore= person.calculateScore();
+        int cScore= computer.calculateScore();
+        System.out.println("Your hand: " + person.getHand());
+        System.out.println("Computer hand: " + computer.getHand());
+        System.out.println("Your score = " + pScore);
+        System.out.println("Computer score = " + cScore);
+        if(pScore<cScore){
             System.out.println("You win!");
-        } else if (pScore > cScore) {
+        } else if(pScore>cScore){
             System.out.println("Computer wins!");
         } else {
             System.out.println("Tie!");
         }
     }
 
-    // Convert from letter (Z,Y,X,W or V,U,T,S) to index
-    private int getIndex(String choice) {
-        switch(choice) {
+    private int getIndex(String choice){
+        // Z=0, Y=1, X=2, W=3
+        // V=0, U=1, T=2, S=3
+        // This maps the letter to the same index but for the computer's side
+        switch(choice){
             case "Z": case "V": return 0;
             case "Y": case "U": return 1;
             case "X": case "T": return 2;
             case "W": case "S": return 3;
-            default: return -1;
         }
+        return -1;
     }
 
     public static void main(String[] args){
-        Game g = new Game();
+        Game g= new Game();
         g.playGame();
     }
 }
