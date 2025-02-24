@@ -65,7 +65,7 @@ public class CardGameViewer extends JFrame {
         g.drawString("Welcome to the Windows Card Game!", WINDOW_HEIGHT / 2, 75);
 
         // Display Instructions
-        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        g.setFont(new Font("Serif", Font.PLAIN, 14));
         g.drawString("Instructions:", 250, 150);
 
         g.drawString("You will be delt 4 cards (no peeking!). Your goal is to get the lowest point value.", 250, 190);
@@ -125,11 +125,11 @@ public class CardGameViewer extends JFrame {
         int cardHeight = 120;
         int centerX = (WINDOW_WIDTH - cardWidth) / 2;
         int discardY = 150;
-        int drawY    = discardY + 180; // vertical gap between piles
+        int drawY    = discardY + 180;
 
         // Labels
         g.setColor(Color.BLACK);
-        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.setFont(new Font("Serif", Font.BOLD, 16));
         g.drawString("Discard Pile", centerX, discardY - 10);
         g.drawString("Draw Pile",    centerX, drawY    - 10);
 
@@ -228,7 +228,7 @@ public class CardGameViewer extends JFrame {
 
         // Label
         g.setColor(Color.BLACK);
-        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.setFont(new Font("Serif", Font.BOLD, 16));
         g.drawString(label, x+30, y-5);
     }
 }

@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27eb6eab-d3b9-4b72-b7c4-6a92d609081e" name="Changes" comment="the cards all show up and piles are initiated. user can flip two cards at the beginning of the game! the discard and draw piles are wrong though and the special cards aren't flipped...">
+    <list default="true" id="27eb6eab-d3b9-4b72-b7c4-6a92d609081e" name="Changes" comment="fixed the draw and discard pile issues! i wasn't assigning the images in the correct order so the cards displayed were all wrong. now it's good!! also added background images and put them in an arraylist so i can have different one's for different parts of the game">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CardGameViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CardGameViewer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740367179650</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fixed the draw and discard pile issues! i wasn't assigning the images in the correct order so the cards displayed were all wrong. now it's good!! also added background images and put them in an arraylist so i can have different one's for different parts of the game">
+      <option name="closed" value="true" />
+      <created>1740377088749</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1740377088749</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -247,7 +252,8 @@
     <MESSAGE value="got cards to show up for the initial start of the game screen" />
     <MESSAGE value="cards show when dealt and when i set faceup as true they show up with thier values." />
     <MESSAGE value="the cards all show up and piles are initiated. user can flip two cards at the beginning of the game! the discard and draw piles are wrong though and the special cards aren't flipped..." />
-    <option name="LAST_COMMIT_MESSAGE" value="the cards all show up and piles are initiated. user can flip two cards at the beginning of the game! the discard and draw piles are wrong though and the special cards aren't flipped..." />
+    <MESSAGE value="fixed the draw and discard pile issues! i wasn't assigning the images in the correct order so the cards displayed were all wrong. now it's good!! also added background images and put them in an arraylist so i can have different one's for different parts of the game" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed the draw and discard pile issues! i wasn't assigning the images in the correct order so the cards displayed were all wrong. now it's good!! also added background images and put them in an arraylist so i can have different one's for different parts of the game" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
